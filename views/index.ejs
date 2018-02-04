@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>QWITTER</title>
+  </head>
+<body>
+  <p>hello</p>
+  <form action="/auth/facebook" method="get">
+  <button type="submit">
+	<%if (userId == '') { %>
+		facebook login
+	<% } else {  %>
+		<%=userId %>
+	<% } %>
+  </button>
+  </form>
+  <a href="/kakao">카카오계정</a>
+</body>
+</html>
