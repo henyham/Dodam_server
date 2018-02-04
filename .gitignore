@@ -58,6 +58,5 @@ typings/
 .env
 
 #db config file
-db_con.js
-db_info.js
+db_*.js
 

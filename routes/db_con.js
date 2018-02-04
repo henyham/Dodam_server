@@ -22,3 +22,5 @@ module.exports = function () {
     }
   }
 };
+
+console.log("I want this file to be excluded...");
