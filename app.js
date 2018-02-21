@@ -12,7 +12,7 @@ var app = express();
 //var passport = require('./routes/passport')(app);
 var index = require('./routes/index');
 var users = require('./routes/users');
-
+var test = require('./routes/test');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,7 +32,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/test', test);
 app.use('/users', users);
+
 
 app.use(npmPassport.initialize());
 app.use(npmPassport.session());

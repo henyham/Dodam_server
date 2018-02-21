@@ -6,25 +6,45 @@ var mysql = require('./db_con')();
 var connection = mysql.init();
 mysql.test_open(connection);
 
-/* GET home page. */
+/* GET ho.e page. */
 router.get('/', function(req, res, next) {
 
   var userId = '';
   if(req.session.passport) {
     userId = req.session.passport.user.userId;
     console.log('req.session.passport.user = ' + req.session.passport.user);
+  } else
+    console.log('no user');
+
+  res.render('index', {userId});
+        var stmt = 'select * from User';
+        connection.query(stmt, function (err, result){
+                if (err) {
+                        console.log(err);
+                } else {
+                        console.log("db connection success!!");
+                }
+        })
+});
+
+router.get('/test', function(req, res, next) {
+/*
+  var userId = '';
+  if(req.session.passport) {
+    userId = req.session.passport.user.userId;
+    console.log('req.session.passport.user = ' + req.session.passport.user);
   } else 
     console.log('no user');
-  
-  res.render('index', {userId});
-	var stmt = 'select * from User';
+  */
+  res.send('hello world!');
+/*	var stmt = 'select * from User';
 	connection.query(stmt, function (err, result){
 		if (err) {
 			console.log(err);
 		} else {
 			console.log("db connection success!!");
 		}
-	})
+	})*/
 });
 
 
