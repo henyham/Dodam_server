@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var mysql = require('./db_con');
+var mysql = require('./db_con')();
 var connection = mysql.init();
 mysql.test_open(connection);
 
@@ -9,7 +9,7 @@ mysql.test_open(connection);
 router.get('/', function(req, res, next) {
   //res.send('respond with a resource');
   if(req.query.userId != null){
-    string userId = req.query.userId; 
+    var userId = req.query.userId; 
   } else {
     console.log("req error : no userId in parameter")
   }
