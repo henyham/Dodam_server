@@ -7,11 +7,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');	//세션 설정
 var npmPassport = require('passport');
+var bodyParser = require('body-parser');
 
 var app = express();
+
 //var passport = require('./routes/passport')(app);
 var index = require('./routes/index');
 var users = require('./routes/users');
+var books = require('./routes/books');
 var test = require('./routes/test');
 
 // view engine setup
@@ -34,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/test', test);
 app.use('/users', users);
+app.use('/books', books);
 
 
 app.use(npmPassport.initialize());
