@@ -177,7 +177,7 @@ router.post('/update_reading',function(req, res, next){
   console.log("isbn : " + req.body.isbn);
   //body에 userId, isbn, readingStage를 받아온다
   var result ={};
-  dbConn.query('UPDATE REGISTERBOOK set READING_STAGE = ? where USER_ID = ? AND BOOK_ISBN = ?);',[req.body.readingStage, req.body.userId, req.body.isbn], function(err, results){
+  dbConn.query('UPDATE REGISTERBOOK set READING_STAGE = ? where USER_ID = ? AND BOOK_ISBN = ?;',[req.body.readingStage, req.body.userId, req.body.isbn], function(err, results){
     if(err){
       console.log(err);
       result["error"] = "error : database UPDATE error from /books/update_reading";
