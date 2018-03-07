@@ -198,33 +198,24 @@ router.post('/update_reading',function(req, res, next){
   console.log("isbn : " + req.body.isbn);
   //body에 userId, isbn, readingStage를 받아온다
   var result ={};
-  Return new Promise((fulfill, reject) => {
-    if(err) reject(err);
-    else fulfill(result);
-  })
-  .catch(err => {
-    res.json(result);
-  })
-  .then(result => {
-    return new Promise((fulfill , reject) => {
-      dbConn.query('UPDATE REGISTERBOOK set READING_STAGE = ? where USER_ID = ? AND BOOK_ISBN = ?;',[req.body.readingStage, req.body.userId, req.body.isbn], function(err, results){
-        if(err){
-          result["error"] = "error : database UPDATE error from /books/update_reading";
-          reject([err, result]);
-        }
-        else {
-          result["status"] = "SUCCESS";
-          fulfill(result);
-        }
-      });
-    })
+  return new Promise((fulfill , reject) => {
+    dbConn.query('UPDATE REGISTERBOOK set READING_STAGE = ? where USER_ID = ? AND BOOK_ISBN = ?;',[req.body.readingStage, req.body.userId, req.body.isbn], function(err, results){
+      if(err){
+        result["error"] = "error : database UPDATE error from /books/update_reading";
+        reject([err, result]);
+      }
+      else {
+        result["status"] = "SUCCESS";
+        fulfill(result);
+      }
+    });
   })
   .catch(([err, result]) => {
-    res.json(result);
+    res.json("err : " + err + " result : " + result);
   })
   .then(result => {
     return new Promise((fulfill, reject) => {
-      dbConn.query('SELECT BOOK_ISBN FROM REGISTERBOOK where USER_ID = ? ', req.body.userId , function(err, result) => {
+      dbConn.query('SELECT BOOK_ISBN FROM REGISTERBOOK where USER_ID = ? ', req.body.userId , function(err, result) {
         if(err){
           reject(err);
         }
@@ -238,10 +229,9 @@ router.post('/update_reading',function(req, res, next){
     res.json(err);
   })
   .then(result => {
-    console.log(result);
-    res.json(result);
+    console.log(result[0].BOOK_ISBN);
+    res.json(result[0].BOOK_ISBN);
   })
 });
-
 router.post('/review')
 module.exports = router;
