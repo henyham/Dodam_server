@@ -120,6 +120,7 @@ router.get('/exist',function(req, res, next){
 	//새로운 책
 	console.log("not in BOOK table, new BOOK");
 	result["bookState"] = "newBook";
+	console.log("*****" + result.bookState);
 	res.json(result);
       }
     }
