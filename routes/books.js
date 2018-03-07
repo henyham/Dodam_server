@@ -58,7 +58,7 @@ router.get('/state',function(req, res, next){
 router.get('/exist',function(req, res, next){
   console.log("start /books/exist");
   var result = {};
-  
+
   //parameter에 book_isbn값이 정상적으로 있는지 확인
   if(req.query.isbn != null && req.query.isbn !='undefined'){
     var isbn = req.query.isbn;
@@ -95,7 +95,7 @@ router.get('/exist',function(req, res, next){
       if(data != ""){
 	//이미 등록되어있는 책
         console.log("already registered book in BOOK table");
-        
+
 	//USER_ID, BOOK_ISBN, BOOK_STATE, ADD_DATE 추가해야함
 	var date = new Date();
 	var year = date.getFullYear();
@@ -137,7 +137,7 @@ router.post('/register',function(req, res, next){
   console.log("pubdate : " + req.body.pubdate);
   console.log("fixed_price : " + req.body.fixed_price);*/
   var result = {};
-  
+
   dbConn.query('INSERT INTO BOOK VALUES(?,?,?,?,?,?,?);', [req.body.isbn, req.body.cover, req.body.title, req.body.author, req.body.publisher, req.body.pubdate, req.body.fixed_price], function(err, results, fields){
     if(err){
       console.log(err);
@@ -171,22 +171,76 @@ router.post('/register',function(req, res, next){
   });
 });
 
+// router.post('/update_reading',function(req, res, next){
+//   console.log("readingStage : " + req.body.readingStage);
+//   console.log("userId : " + req.body.userId);
+//   console.log("isbn : " + req.body.isbn);
+//   //body에 userId, isbn, readingStage를 받아온다
+//   var result ={};
+//
+//   dbConn.query('UPDATE REGISTERBOOK set READING_STAGE = ? where USER_ID = ? AND BOOK_ISBN = ?;',[req.body.readingStage, req.body.userId, req.body.isbn], function(err, results){
+//     if(err){
+//       console.log(err);
+//       result["error"] = "error : database UPDATE error from /books/update_reading";
+//       res.json(result);
+//     } else {
+//       console.log("finish UPDATE REGISTERBOOK READING_STAGE");
+//       result["status"] = "SUCCESS";
+//       res.json(result);
+//     }
+//   });
+// });
+
 router.post('/update_reading',function(req, res, next){
   console.log("readingStage : " + req.body.readingStage);
   console.log("userId : " + req.body.userId);
   console.log("isbn : " + req.body.isbn);
   //body에 userId, isbn, readingStage를 받아온다
   var result ={};
-  dbConn.query('UPDATE REGISTERBOOK set READING_STAGE = ? where USER_ID = ? AND BOOK_ISBN = ?;',[req.body.readingStage, req.body.userId, req.body.isbn], function(err, results){
-    if(err){
-      console.log(err);
-      result["error"] = "error : database UPDATE error from /books/update_reading";
-      res.json(result);
-    } else {
-      console.log("finish UPDATE REGISTERBOOK READING_STAGE");
-      result["status"] = "SUCCESS";
-      res.json(result);
-    }
-  });
+  Return new Promise((fulfill, reject) => {
+    if(err) reject(err);
+    else fulfill(result);
+  })
+  .catch(err => {
+    res.json(result);
+  })
+  .then(result => {
+    return new Promise((fulfill , reject) => {
+      dbConn.query('UPDATE REGISTERBOOK set READING_STAGE = ? where USER_ID = ? AND BOOK_ISBN = ?;',[req.body.readingStage, req.body.userId, req.body.isbn], function(err, results){
+        if(err){
+          result["error"] = "error : database UPDATE error from /books/update_reading";
+          reject([err, result]);
+        }
+        else {
+          result["status"] = "SUCCESS";
+          fulfill(result);
+        }
+      });
+    })
+  })
+  .catch(([err, result]) => {
+    res.json(result);
+  })
+  .then(result => {
+    return new Promise((fulfill, reject) => {
+      dbConn.query('SELECT BOOK_ISBN FROM REGISTERBOOK where USER_ID = ? ', req.body.userId , function(err, result) => {
+        if(err){
+          reject(err);
+        }
+        else{
+          fulfill(result);
+        }
+      })
+    })
+  })
+  .catch(err => {
+    res.json(err);
+  })
+  .then(result => {
+    console.log(result);
+    res.json(result);
+  })
 });
+
+router.post('/review')
 module.exports = router;
